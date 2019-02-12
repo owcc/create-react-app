@@ -44,6 +44,9 @@ const shouldInlineRuntimeChunk = process.env.INLINE_RUNTIME_CHUNK !== 'false';
 // Check if TypeScript is setup
 const useTypeScript = fs.existsSync(paths.appTsConfig);
 
+// default function
+const nonFnc = self => self;
+
 // style files regexes
 const cssRegex = /\.css$/;
 const cssModuleRegex = /\.module\.css$/;
@@ -107,6 +110,12 @@ module.exports = function(webpackEnv) {
               },
               stage: 3,
             }),
+            env.raw['REACT_APP_REM_UNIT']
+              ? require('postcss-px2rem')({
+                  remUnit: env.raw['REACT_APP_REM_UNIT'],
+                  remPrecision: 8,
+                })
+              : nonFnc,
           ],
           sourceMap: isEnvProduction ? shouldUseSourceMap : isEnvDevelopment,
         },
